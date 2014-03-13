@@ -2,7 +2,7 @@
 -include_lib("eqc/include/eqc.hrl").
 -compile(export_all).
 
--define(Q, queue).
+-define(Q, myqueue).
 
 queue() ->
     ?SIZED(Size,well_defined(queue(Size))).
