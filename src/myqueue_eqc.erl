@@ -27,15 +27,15 @@ prop_itsthere() ->
    ?FORALL(I,int(),
            I == queue:last(queue:cons(I, queue:new()))).
 
-prop_last_cons() ->
+prop_get_cons() ->
     ?FORALL({I,Q}, {int(),queue()},
-            queue:last(queue:cons(I,eval(Q))) == I).
+            queue:get(queue:cons(I,eval(Q))) == I).
 
 model(Q) -> queue:to_list(Q).
 
 prop_cons1() ->
    ?FORALL({I,Q},{int(),queue()},
-           model(queue:cons(I,eval(Q))) == model(eval(Q)) ++ [I]).
+           model(queue:cons(I,eval(Q))) == [I] ++ model(eval(Q))).
 
 prop_cons2() ->
    ?FORALL({I,Q},{int(),queue()},
