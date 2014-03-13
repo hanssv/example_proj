@@ -9,8 +9,8 @@ queue() ->
 
 queue(Size) ->
     ?LAZY(
-    oneof([{call,queue,new,[]}]
-          ++ [{call,queue,cons,[int(),queue(Size-1)]} || Size>0 ]
+    oneof([{call,?Q,new,[]}]
+          ++ [{call,?Q,cons,[int(),queue(Size-1)]} || Size>0 ]
           %% ++ [{call,queue,tail,[queue(Size-1)]} || Size>0]
          )).
 
@@ -25,28 +25,28 @@ queue(Size) ->
 
 prop_itsthere() ->
    ?FORALL(I,int(),
-           I == queue:last(queue:cons(I, queue:new()))).
+           I == ?Q:last(?Q:cons(I, ?Q:new()))).
 
 prop_get_cons() ->
     ?FORALL({I,Q}, {int(),queue()},
-            queue:get(queue:cons(I,eval(Q))) == I).
+            ?Q:get(?Q:cons(I,eval(Q))) == I).
 
-model(Q) -> queue:to_list(Q).
+model(Q) -> ?Q:to_list(Q).
 
 prop_cons1() ->
    ?FORALL({I,Q},{int(),queue()},
-           model(queue:cons(I,eval(Q))) == [I] ++ model(eval(Q))).
+           model(?Q:cons(I,eval(Q))) == [I] ++ model(eval(Q))).
 
 prop_cons2() ->
    ?FORALL({I,Q},{int(),queue()},
-           model(queue:cons(I,eval(Q))) == [I|model(eval(Q))]).
+           model(?Q:cons(I,eval(Q))) == [I|model(eval(Q))]).
 
 prop_head() ->
     ?FORALL(Q,queue(),
             begin
                 QVal = eval(Q),
-                queue:is_empty(QVal) orelse
-                         queue:head(QVal) == hd(model(QVal))
+                ?Q:is_empty(QVal) orelse
+                         ?Q:head(QVal) == hd(model(QVal))
             end).
 
 prop_last() ->
@@ -54,8 +54,8 @@ prop_last() ->
             aggregate(command_names(Q),
             begin
                 QVal = eval(Q),
-                queue:is_empty(QVal) orelse
-                         queue:last(QVal) == lists:last(model(QVal))
+                ?Q:is_empty(QVal) orelse
+                         ?Q:last(QVal) == lists:last(model(QVal))
             end)).
 
 command_names({call,_Mod,Fun,Args}) ->
