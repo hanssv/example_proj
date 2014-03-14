@@ -76,8 +76,13 @@ prop_tail() ->
             end)).
 
 prop_tail_cons() ->
+  ?FORALL({I,Q},{int(),queue()},
+          model(?Q:tail(?Q:cons(I,eval(Q))) == model(eval(Q)))).
+
+prop_tail_snoc() ->
   fails(?FORALL({I,Q},{int(),queue()},
-          model(?Q:tail(?Q:cons(I,eval(Q))) == model(eval(Q))))).
+                collect(length(model(eval(Q))),
+                model(?Q:tail(?Q:snoc(eval(Q),I)) == model(eval(Q)))))).
 
 command_names({call,_Mod,Fun,Args}) ->
     [Fun] ++ command_names(Args);
