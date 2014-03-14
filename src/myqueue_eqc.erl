@@ -11,7 +11,8 @@ queue(Size) ->
     ?LAZY(
     oneof([{call,?Q,new,[]}]
           ++ [{call,?Q,cons,[int(),queue(Size-1)]} || Size>0 ]
-          %% ++ [{call,queue,tail,[queue(Size-1)]} || Size>0]
+          ++ [{call,?Q,snoc,[queue(Size-1), int()]} || Size>0]
+          ++ [{call,?Q,tail,[queue(Size-1)]} || Size>0]
          )).
 
 %% defined(E) ->
@@ -57,6 +58,26 @@ prop_last() ->
                 ?Q:is_empty(QVal) orelse
                          ?Q:last(QVal) == lists:last(model(QVal))
             end)).
+
+prop_snoc() ->
+  ?FORALL({I,Q},{int(),queue()},
+          model(?Q:snoc(eval(Q), I)) == model(eval(Q)) ++ [I]).
+
+prop_last_snoc() ->
+    ?FORALL({I,Q},{int(),queue()}, ?Q:last(?Q:snoc(eval(Q),I)) == I).
+
+prop_tail() ->
+    ?FORALL(Q,queue(),
+            aggregate(command_names(Q),
+            begin
+              QVal = eval(Q),
+              ?Q:is_empty(QVal) orelse
+                ?Q:tail(QVal) == tl(model(QVal))
+            end)).
+
+prop_tail_cons() ->
+  fails(?FORALL({I,Q},{int(),queue()},
+          model(?Q:tail(?Q:cons(I,eval(Q))) == model(eval(Q))))).
 
 command_names({call,_Mod,Fun,Args}) ->
     [Fun] ++ command_names(Args);
