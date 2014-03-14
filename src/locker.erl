@@ -2,28 +2,31 @@
 
 -compile(export_all).
 
+-record(state, {current = [], old = []}).
+
 start() ->
     gen_fsm:start({local,locker},?MODULE,[],[]).
 
 init([]) ->
-    {ok,unlocked,[]}.
+    {ok,unlocked,#state{}}.
 
 unlocked(lock,S) ->
-    {next_state,locked,S}.
+    {next_state,locked,S#state{ old = S#state.current }}.
 
 unlocked({read,Key},Caller,S) ->
-    gen_fsm:reply(Caller,proplists:get_value(Key,S)),
+    gen_fsm:reply(Caller,proplists:get_value(Key,S#state.current)),
     {next_state,unlocked,S}.
 
 locked({write,Key,Value},S) ->
-    {next_state,locked,[{Key,Value}|lists:keydelete(Key,1,S)]};
+    {next_state,locked,
+     S#state{ current = [{Key,Value} | lists:keydelete(Key,1,S#state.current)]}};
 locked(abort,S) ->
-    {next_state,unlocked,S};
+    {next_state,unlocked,S#state{ current = S#state.old }};
 locked(commit,S) ->
     {next_state,unlocked,S}.
 
 locked({read,Key},Client,S) ->
-    gen_fsm:reply(Client,proplists:get_value(Key,S)),
+    gen_fsm:reply(Client,proplists:get_value(Key,S#state.current)),
     {next_state,locked,S}.
 
 handle_sync_event(stop,_,_,_) ->
