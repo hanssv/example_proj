@@ -9,9 +9,13 @@
 -include_lib("eqc/include/eqc.hrl").
 
 -export([new/0, cons/2, head/1, last/1]).
+-export([to_list/1, is_empty/1]).
 
 new() ->
   <<>>.
+
+is_empty(Q) ->
+  Q == <<>>.
 
 cons(X, Q) ->
   <<Q/binary, X:16>>.
@@ -25,4 +29,7 @@ last(Q) ->
   <<_:S, X:16>> = Q,
   X.
 
-
+to_list(<<X:16, Rest/binary>>) ->
+  [X | to_list(Rest)];
+to_list(_) ->
+  [].
