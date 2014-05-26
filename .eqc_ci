@@ -1,2 +1,3 @@
 {build, "cd ebin; erl -make"}.
 {test_dirs, "ebin"}.
+{cover_tool, eqc_cover}.
