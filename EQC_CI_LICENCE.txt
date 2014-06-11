@@ -31,4 +31,4 @@ Quviq reserves the right to exclude repositories that break this
 agreement from its continuous integration service.
 
 Any dispute arising from the use of Quviq's service will be resolved
-under Swedish law.
+under English law.
