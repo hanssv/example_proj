@@ -1,7 +1,9 @@
 example_proj
 ============
 
-[<img src="http://quickcheck-ci.com/p/hanssv/example_proj.png" alt="Build Status" width="160px">](http://quickcheck-ci.com/p/hanssv/example_proj)
+Badge .png: [<img src="http://quickcheck-ci.com/p/hanssv/example_proj.png" alt="Build Status" width="160px">](http://quickcheck-ci.com/p/hanssv/example_proj)
+
+Badge .svg: [<img src="http://quickcheck-ci.com/p/hanssv/example_proj.svg" alt="Build Status" width="160px">](http://quickcheck-ci.com/p/hanssv/example_proj)
 
 A small example project. The only purpose of this project is to serve as a demonstrator 
 for QuickCheck CI (http://quickcheck-ci.com/). That means that the interesting parts of
